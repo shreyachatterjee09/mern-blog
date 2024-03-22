@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { set } from 'mongoose';
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -11,6 +10,7 @@ export default function DashPosts() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState('');
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -72,10 +72,10 @@ export default function DashPosts() {
   };
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {currentUser.isAdmin && userPosts.length > 0 ? (
-        <>
-          <Table hoverable className='shadow-md'>
+    <div className='py-4 overflow-hidden'>
+      <div className='md:mx-3'>
+        <div className='overflow-x-auto'>
+          <Table hoverable className='shadow-md w-full'>
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>
               <Table.HeadCell>Post image</Table.HeadCell>
@@ -87,7 +87,7 @@ export default function DashPosts() {
               </Table.HeadCell>
             </Table.Head>
             {userPosts.map((post) => (
-              <Table.Body className='divide-y'>
+              <Table.Body key={post._id} className='divide-y'>
                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                   <Table.Cell>
                     {new Date(post.updatedAt).toLocaleDateString()}
@@ -133,17 +133,15 @@ export default function DashPosts() {
               </Table.Body>
             ))}
           </Table>
-          {showMore && (
-            <button
-              onClick={handleShowMore}
-              className='w-full text-teal-500 self-center text-sm py-7'
-            >
-              Show more
-            </button>
-          )}
-        </>
-      ) : (
-        <p>You have no posts yet!</p>
+        </div>
+      </div>
+      {showMore && (
+        <button
+          onClick={handleShowMore}
+          className='w-full text-teal-500 self-center text-sm py-7'
+        >
+          Show more
+        </button>
       )}
       <Modal
         show={showModal}
